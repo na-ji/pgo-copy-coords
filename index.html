@@ -8,21 +8,41 @@
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 	<style>
+	.container .row .col-12 {
+		text-align: center;
+	}
+	#pkm {
+		display: block;
+		width: 250px;
+		margin: 20px auto;
+		transition: all 0.5s ease;
+	}
+	#pkm img {
+		margin: 50px 0;
+	}
 	</style>
 </head>
 <body>
-	<div class="container-fluid">
+	<div class="container">
 		<div class="row">
-			<div class="col">
-				<div id="pkm">
-					<button class="hidden btn btn-primary" id="copyCoords">Copier</button><br />
-					<input id="coords" type="text"/>
-				</div>
+			<div class="col-12">
+				<button id="pkm" class="hidden btn btn-primary">
+					<div class="row">
+						<div class="col-6" id="pkm_id"></div>
+						<div class="col-6" id="pkm_name"></div>
+					</div>
+					<img/><br />
+					<span>Cliquer pour copier</span><br />
+				</button>
+			</div>
+			<div class="col-12">
+				<input id="coords" type="text"/>
 			</div>
 		</div>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script src="./pokedex.js"></script>
 
 	<script type="text/javascript">
 		function parseQueryString(url) {
@@ -43,6 +63,8 @@
 
 			const hasKeys = requiredKeys.every(function(k) { return k in urlParams; });
 
+			$('#pkm').removeClass('hidden');
+
 			if (!hasKeys) {
 				$('#pkm').text('wrong link');
 
@@ -50,11 +72,16 @@
 			}
 
 			$('#coords').val(`${urlParams['lat']},${urlParams['lon']}`);
+			$('#pkm img').attr('src', `//pgo.naji-astier.com/assets/${urlParams['pkm_id']}.png`);
+			$('#pkm_id').text(urlParams['pkm_id']);
+			$('#pkm_name').text(pokedex[urlParams['pkm_id']].name);
 
-			$('#copyCoords').on('click', function () {
+			$('#pkm').on('click', function () {
 				$('#coords').trigger('focus');
 				$('#coords').trigger('select');
-				console.log(document.execCommand('copy'));
+				document.execCommand('copy');
+				$('#pkm').removeClass('btn-primary').addClass('btn-success');
+				$('#pkm span').text('Copié!');
 			});
 		});
 	</script>
