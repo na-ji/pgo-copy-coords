@@ -42,6 +42,7 @@
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 	<script src="./pokedex.js"></script>
 
 	<script type="text/javascript">
@@ -71,15 +72,15 @@
 				return;
 			}
 
-			$('#coords').val(`${urlParams['lat']},${urlParams['lon']}`);
+			const coords = `${urlParams['lat']},${urlParams['lon']}`;
+			$('#coords').val(coords);
+			$('#pkm').attr('data-clipboard-text', coords);
 			$('#pkm img').attr('src', `//pgo.naji-astier.com/assets/${urlParams['pkm_id']}.png`);
 			$('#pkm_id').text(urlParams['pkm_id']);
 			$('#pkm_name').text(pokedex[urlParams['pkm_id']].name);
 
-			$('#pkm').on('click', function () {
-				$('#coords').trigger('focus');
-				$('#coords').trigger('select');
-				document.execCommand('copy');
+			var clipboard = new Clipboard('#pkm');
+			clipboard.on('success', function() {
 				$('#pkm').removeClass('btn-primary').addClass('btn-success');
 				$('#pkm span').text('Copié!');
 			});
